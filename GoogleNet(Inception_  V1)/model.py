@@ -6,24 +6,24 @@ class InceptionBlock(nn.Module):
         super().__init__()
         self.branch1 = nn.Sequential(
             nn.Conv2d(in_channels, out_1x1, kernel_size=1),
-            nn.ReLU(inplace=True),
+            nn.ReLU(inplace=True)
         )
         self.branch2 = nn.Sequential(
             nn.Conv2d(in_channels, red_3x3, kernel_size=1),
             nn.ReLU(inplace=True),
             nn.Conv2d(red_3x3, out_3x3, kernel_size=3, padding=1),
-            nn.ReLU(inplace=True),
+            nn.ReLU(inplace=True)
         )
         self.branch3 = nn.Sequential(
             nn.Conv2d(in_channels, red_5x5, kernel_size=1),
             nn.ReLU(inplace=True),
             nn.Conv2d(red_5x5, out_5x5, kernel_size=5, padding=2),
-            nn.ReLU(inplace=True),
+            nn.ReLU(inplace=True)
         )
         self.branch4 = nn.Sequential(
             nn.MaxPool2d(kernel_size=3, stride=1, padding=1),
             nn.Conv2d(in_channels, out_pool, kernel_size=1),
-            nn.ReLU(inplace=True),
+            nn.ReLU(inplace=True)
         )
 
     def forward(self, x):
@@ -53,13 +53,13 @@ class GoogLeNet(nn.Module):
             InceptionBlock(528, 256, 160, 320, 32, 128, 128),
             nn.MaxPool2d(kernel_size=3, stride=2, ceil_mode=True),
             InceptionBlock(832, 256, 160, 320, 32, 128, 128),
-            InceptionBlock(832, 384, 192, 384, 48, 128, 128),
+            InceptionBlock(832, 384, 192, 384, 48, 128, 128)
         )
         self.avgpool = nn.AdaptiveAvgPool2d((1, 1))
         self.classifier = nn.Sequential(
             nn.Flatten(),
             nn.Dropout(p=0.4),
-            nn.Linear(1024, no_of_classes),
+            nn.Linear(1024, no_of_classes)
         )
         self.init_parameter()
 
@@ -74,7 +74,6 @@ class GoogLeNet(nn.Module):
         x = self.avgpool(x)
         x = self.classifier(x)
         return x
-
 
 if __name__ == "__main__":
     model = GoogLeNet(no_of_classes=1000, in_channels=3)
